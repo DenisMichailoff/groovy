@@ -1,0 +1,83 @@
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+import org.gradle.util.GradleVersion
+
+plugins {
+    id "com.gradle.enterprise" version "3.5.2"
+}
+
+gradleEnterprise {
+    buildScan {
+        termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+        apply from: 'gradle/build-scans.gradle'
+    }
+}
+
+def subprojects = [
+        'groovy-all',
+        'groovy-ant',
+        'groovy-astbuilder',
+        'groovy-binary',
+        'groovy-bom',
+        'groovy-cli-commons',
+        'groovy-cli-picocli',
+        'groovy-console',
+        'groovy-contracts',
+        'groovy-datetime',
+        'groovy-dateutil',
+        'groovy-docgenerator',
+        'groovy-groovydoc',
+        'groovy-groovysh',
+        'groovy-jmx',
+        'groovy-json',
+        'groovy-jsr223',
+        'groovy-ginq',
+        'groovy-macro',
+        'groovy-macro-library',
+        'groovy-nio',
+        'groovy-servlet',
+        'groovy-sql',
+        'groovy-swing',
+        'groovy-templates',
+        'groovy-test',
+        'groovy-test-junit5',
+        'groovy-testng',
+        'groovy-toml',
+        'groovy-typecheckers',
+        'groovy-xml',
+        'groovy-yaml',
+        'performance',
+        'tests-preview',
+        'binary-compatibility',
+        'stress'
+]
+
+include(subprojects as String[])
+
+rootProject.children.each { prj ->
+    prj.projectDir = new File("$rootDir/subprojects/$prj.name")
+}
+
+rootProject.name = 'groovy'
+
+GradleVersion gradleVersion = GradleVersion.current()
+GradleVersion gradle5_6 = GradleVersion.version('5.6')
+if (gradleVersion >= gradle5_6) {
+    enableFeaturePreview('GROOVY_COMPILATION_AVOIDANCE')
+}
